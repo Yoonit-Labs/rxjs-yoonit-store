@@ -1,7 +1,7 @@
 /**
  * @description Create object with domain name '/' function's name
- * @param accessors Object with getters, setters or mixers
- * @param moduleName Module name.
+ * @param {Object} accessors Object with getters, setters or mixers
+ * @param {string} moduleName Module name.
  * @returns Object
  */
 function modularizeFunctionNames (accessors, moduleName) {
@@ -15,7 +15,7 @@ function modularizeFunctionNames (accessors, moduleName) {
 
 /**
  * @description Create store accessors
- * @param modules
+ * @param {Object} modules
  * @returns {{setterList: *, getterList, initialState, actionList}|{setterList, getterList, initialState, actionList: {}}}
  */
 function createStoreAccessors (modules) {

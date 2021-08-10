@@ -10,8 +10,8 @@ const store = (modules) => {
     const storeAccessors = createStoreAccessors(modules)
     /**
      * Create a reducer according to module action by type
-     * @param state
-     * @param action
+     * @param {Observable} state
+     * @param {string} action
      * @returns {*}
      */
     const reducer = (state = storeAccessors.initialState, action) => {
@@ -38,7 +38,7 @@ const store = (modules) => {
 
     /**
      * Create a get event as alias shorthand for returning get functions from modules
-     * @param action
+     * @param {string} action
      * @returns {*}
      */
     store.get = (action) => {
@@ -59,8 +59,8 @@ const store = (modules) => {
 
     /**
      * Create a mix event as alias shorthand for next/dispatch
-     * @param action
-     * @param payload
+     * @param {string} action
+     * @param {Object} payload
      */
     store.mix = (action, payload) => {
         payload
@@ -70,8 +70,8 @@ const store = (modules) => {
 
     /**
      * Create a set action event
-     * @param action
-     * @param payload
+     * @param {string} action
+     * @param {Object} payload
      * @returns {*}
      */
     store.set = (action, payload) =>
@@ -81,7 +81,7 @@ const store = (modules) => {
 
     /**
      * Create a subscription stream const to be reused
-     * @param subscriptionHandler
+     * @param {Function} subscriptionHandler
      * @returns {*}
      */
     const subscription = async (subscriptionHandler) => await store.subscribe(subscriptionHandler)
