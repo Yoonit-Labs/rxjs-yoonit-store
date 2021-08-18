@@ -1,10 +1,10 @@
+import { Persist } from '../persist/main'
 /**
  * @description Create object with domain name '/' function's name
  * @param {Object} accessors Object with getters, setters or mixers
  * @param {string} moduleName Module name.
  * @returns Object
  */
-import {Persist} from "../persist/main";
 
 function modularizeFunctionNames (accessors, moduleName) {
   const modularizedFunctions = {}

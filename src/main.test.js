@@ -8,6 +8,8 @@ describe('Testing Yoox modularized', () => {
 
     const persistedData = await Persist.get()
 
+    console.log('persistedData', persistedData)
+
     expect(myYoox.get('user/personalData')).toStrictEqual(persistedData.user)
   })
 

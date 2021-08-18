@@ -14,11 +14,11 @@ const store = async (modules, { persist = false }) => {
     const storeInstance = new Subject()
     const storeAccessors = createStoreAccessors(modules)
     const definedStateAtCreation = JSON.parse(JSON.stringify(storeAccessors.initialState))
-    const persistedData = loadPersistedData()
+    const persistedData = await loadPersistedData()
 
     // Load persisted data
     if (persist && persistedData) {
-      storeAccessors.initialState = await Persist.get()
+      storeAccessors.initialState = persistedData
     }
 
     /**
