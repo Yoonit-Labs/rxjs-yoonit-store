@@ -1,5 +1,5 @@
-import { store, persistStoreState } from './yoox'
+import { store } from './yoox'
 
-export default { store, persistStoreState }
+export default { store }
 
-export { store, persistStoreState }
+export { store }
