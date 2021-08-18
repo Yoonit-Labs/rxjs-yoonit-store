@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs'
 import { scan, startWith, shareReplay } from 'rxjs/operators'
-import { createStoreAccessors } from '../utils'
+import { createStoreAccessors, loadPersistedData } from '../utils'
 import Persist from '../persist/main'
 import isEqual from 'lodash.isequal'
 
@@ -10,10 +10,17 @@ import isEqual from 'lodash.isequal'
  * @param {Object} config
  * @returns {Observable}
  */
-const store = (modules, { persist = false }) => {
+const store = async (modules, { persist = false }) => {
     const storeInstance = new Subject()
     const storeAccessors = createStoreAccessors(modules)
     const definedStateAtCreation = JSON.parse(JSON.stringify(storeAccessors.initialState))
+    const persistedData = loadPersistedData()
+
+    // Load persisted data
+    if (persist && persistedData) {
+      storeAccessors.initialState = await Persist.get()
+    }
+
     /**
      * Create a reducer according to module action by type
      * @param {Observable} state
@@ -37,8 +44,7 @@ const store = (modules, { persist = false }) => {
         return value
       }
 
-      Persist.set(value)
-
+      setTimeout(() => Persist.set(value), 500)
       return value
     }
 
@@ -50,14 +56,8 @@ const store = (modules, { persist = false }) => {
         startWith({type: '__INIT__'}),
         scan(reducer, storeAccessors.initialState),
         shareReplay(1),
-        scan(persistStoreState, storeAccessors.initialState)
+        scan(persistStoreState, {})
     )
-
-    /**
-     * Creating a dispatch event to emulate redux-like design pattern
-     * @param action
-     */
-    store.dispatch = (action) => storeInstance.next(action)
 
     /**
      * Create a get event as alias shorthand for returning get functions from modules

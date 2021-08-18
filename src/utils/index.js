@@ -4,6 +4,8 @@
  * @param {string} moduleName Module name.
  * @returns Object
  */
+import {Persist} from "../persist/main";
+
 function modularizeFunctionNames (accessors, moduleName) {
   const modularizedFunctions = {}
   Object.keys(accessors).forEach((functionName) => {
@@ -52,7 +54,16 @@ function createStoreAccessors (modules) {
   }
 }
 
+const loadPersistedData = async () => {
+  try {
+    return Persist.get()
+  } catch (e) {
+    return false
+  }
+}
+
 export {
   createStoreAccessors,
-  modularizeFunctionNames
+  modularizeFunctionNames,
+  loadPersistedData
 }
