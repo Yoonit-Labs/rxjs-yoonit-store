@@ -3,6 +3,7 @@ import { scan, startWith, shareReplay } from 'rxjs/operators'
 import { createStoreAccessors, loadPersistedData } from '../utils'
 import Persist from '../persist/main'
 import isEqual from 'lodash.isequal'
+import createStoreMethods from './methods'
 
 /**
  * Create a rxjs redux-like yoox
@@ -11,7 +12,7 @@ import isEqual from 'lodash.isequal'
  * @returns {Observable}
  */
 const store = async (modules, { persist = false }) => {
-    const storeInstance = new Subject()
+    const storeObservable = new Subject()
     const storeAccessors = createStoreAccessors(modules)
     const definedStateAtCreation = JSON.parse(JSON.stringify(storeAccessors.initialState))
     const persistedData = await loadPersistedData()
@@ -44,7 +45,7 @@ const store = async (modules, { persist = false }) => {
         return value
       }
 
-      setTimeout(() => Persist.set(value), 500)
+      setTimeout(function () { Persist.set(value) }, 500)
       return value
     }
 
@@ -52,57 +53,24 @@ const store = async (modules, { persist = false }) => {
      * Creating a yoox instance with pipe rxjs methods
      * @type {Observable}
      */
-    const store = storeInstance.pipe(
+    const store = storeObservable.pipe(
         startWith({type: '__INIT__'}),
         scan(reducer, storeAccessors.initialState),
         shareReplay(1),
         scan(persistStoreState, {})
     )
 
-    /**
-     * Create a get event as alias shorthand for returning get functions from modules
-     * @param {string} action
-     * @returns {*}
-     */
-    store.get = (action) => {
-      const isModularizedFunction = action.split('').includes('/')
-      let globalState = {}
+    const storeMethods = createStoreMethods({
+      store,
+      storeAccessors,
+      storeObservable
+    })
 
-      if (isModularizedFunction) {
-        const moduleName = action.split('/')[0] || ''
-        globalState = { state: store.state[moduleName], rootState: store.state }
-      } else {
-        globalState.state = store.state
-      }
+    store.get = storeMethods.get
 
-      return storeAccessors.getterList[action]
-        ? storeAccessors.getterList[action](globalState)
-        : console.warn('[Perse SDK Store] The get method ', action, ' does not exist.')
-    }
+    store.mix = storeMethods.mix
 
-    /**
-     * Create a mix event as alias shorthand for next/dispatch
-     * @param {string} action
-     * @param {Object} payload
-     */
-    store.mix = (action, payload) => {
-      if (payload) {
-        return storeInstance.next({ type: action, payload })
-      }
-
-      storeInstance.next({ type: action })
-    }
-
-    /**
-     * Create a set action event
-     * @param {string} action
-     * @param {Object} payload
-     * @returns {*}
-     */
-    store.set = (action, payload) =>
-      storeAccessors.actionList[action]
-            ? storeAccessors.actionList[action](store, payload)
-            : console.warn('[Perse SDK Store] The set method ', action, ' does not exist.')
+    store.set = storeMethods.set
 
     /**
      * Create a subscription stream const to be reused

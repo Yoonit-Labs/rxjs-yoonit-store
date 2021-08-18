@@ -59,7 +59,9 @@ describe('Testing Yoox with root accessors',() => {
   it('Should create yoox object', async () => {
     const myYoox = await Yoox.store(rootAccessors, { persist: true })
 
-    expect(myYoox.get('userPersonalData')).toStrictEqual({ name: '', age: '' })
+    const persistedValue = await Persist.get()
+
+    expect(myYoox.get('userPersonalData')).toStrictEqual(persistedValue.user)
   })
 
   it('Should set user data to store', async () => {
