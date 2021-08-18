@@ -1,9 +1,8 @@
 import { Subject } from 'rxjs'
 import { scan, startWith, shareReplay } from 'rxjs/operators'
 import { createStoreAccessors, loadPersistedData } from '../utils'
-import Persist from '../persist/main'
-import isEqual from 'lodash.isequal'
 import createStoreMethods from './methods'
+import createObserverHandlers from './observerHandlers'
 
 /**
  * Create a rxjs redux-like yoox
@@ -14,40 +13,17 @@ import createStoreMethods from './methods'
 const store = async (modules, { persist = false }) => {
     const storeObservable = new Subject()
     const storeAccessors = createStoreAccessors(modules)
-    const definedStateAtCreation = JSON.parse(JSON.stringify(storeAccessors.initialState))
     const persistedData = await loadPersistedData()
+    const observerHandlers = createObserverHandlers(storeAccessors)
 
     // Load persisted data
     if (persist && persistedData) {
       storeAccessors.initialState = persistedData
     }
 
-    /**
-     * Create a reducer according to module action by type
-     * @param {Observable} state
-     * @param {string} action
-     * @returns {*}
-     */
-    const reducer = (state, action) => {
-        const DEFAULT_STATE = state => state
-        const handler = storeAccessors.setterList[action.type] || DEFAULT_STATE
-        return handler(state, action)
-    }
-
-    /**
-     * Persist
-     * @param {Object} accumulator
-     * @param {Object} value
-     * @returns {*}
-     */
-    const persistStoreState = (accumulator, value) => {
-      if (isEqual(value, definedStateAtCreation) || !persist) {
-        return value
-      }
-
-      setTimeout(function () { Persist.set(value) }, 500)
-      return value
-    }
+    const persistStoreState = persist
+      ? observerHandlers.persistStoreState
+      : (acc, value) => { return value }
 
     /**
      * Creating a yoox instance with pipe rxjs methods
@@ -55,7 +31,7 @@ const store = async (modules, { persist = false }) => {
      */
     const store = storeObservable.pipe(
         startWith({type: '__INIT__'}),
-        scan(reducer, storeAccessors.initialState),
+        scan(observerHandlers.reducer, storeAccessors.initialState),
         shareReplay(1),
         scan(persistStoreState, {})
     )
