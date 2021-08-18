@@ -28,7 +28,6 @@ function createStoreAccessors (modules) {
   let initialState, getterList, setterList, actionList = {}
 
   if (isAccessorsOnRoot) {
-
     return {
       getterList: modules.get,
       actionList: modules.set,
@@ -36,6 +35,7 @@ function createStoreAccessors (modules) {
       setterList: modules.mix
     }
   }
+
   // Populate setterList and initialState object according to modules
   moduleKeys.forEach((moduleKey) => {
     initialState = { ...initialState, [moduleKey]: { ...modules[moduleKey].state } }

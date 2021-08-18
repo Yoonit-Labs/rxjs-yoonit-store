@@ -1,23 +1,45 @@
 import { Subject } from 'rxjs'
 import { scan, startWith, shareReplay } from 'rxjs/operators'
 import { createStoreAccessors } from '../utils'
+import Persist from '../persist/main'
+import isEqual from 'lodash.isequal'
+
 /**
  * Create a rxjs redux-like yoox
+ * @param {Object} modules
+ * @param {Object} config
  * @returns {Observable}
  */
-const store = (modules) => {
+const store = (modules, { persist = false }) => {
     const storeInstance = new Subject()
     const storeAccessors = createStoreAccessors(modules)
+    const definedStateAtCreation = JSON.parse(JSON.stringify(storeAccessors.initialState))
     /**
      * Create a reducer according to module action by type
      * @param {Observable} state
      * @param {string} action
      * @returns {*}
      */
-    const reducer = (state = storeAccessors.initialState, action) => {
+    const reducer = (state, action) => {
         const DEFAULT_STATE = state => state
         const handler = storeAccessors.setterList[action.type] || DEFAULT_STATE
         return handler(state, action)
+    }
+
+    /**
+     * Persist
+     * @param {Object} accumulator
+     * @param {Object} value
+     * @returns {*}
+     */
+    const persistStoreState = (accumulator, value) => {
+      if (isEqual(value, definedStateAtCreation) || !persist) {
+        return value
+      }
+
+      Persist.set(value)
+
+      return value
     }
 
     /**
@@ -26,8 +48,9 @@ const store = (modules) => {
      */
     const store = storeInstance.pipe(
         startWith({type: '__INIT__'}),
-        scan(reducer, undefined),
-        shareReplay(1)
+        scan(reducer, storeAccessors.initialState),
+        shareReplay(1),
+        scan(persistStoreState, storeAccessors.initialState)
     )
 
     /**
@@ -43,17 +66,17 @@ const store = (modules) => {
      */
     store.get = (action) => {
       const isModularizedFunction = action.split('').includes('/')
-      let generalState = {}
+      let globalState = {}
 
       if (isModularizedFunction) {
         const moduleName = action.split('/')[0] || ''
-        generalState = { state: store.state[moduleName], rootState: store.state }
+        globalState = { state: store.state[moduleName], rootState: store.state }
       } else {
-        generalState.state = store.state
+        globalState.state = store.state
       }
 
       return storeAccessors.getterList[action]
-        ? storeAccessors.getterList[action](generalState)
+        ? storeAccessors.getterList[action](globalState)
         : console.warn('[Perse SDK Store] The get method ', action, ' does not exist.')
     }
 
@@ -63,9 +86,11 @@ const store = (modules) => {
      * @param {Object} payload
      */
     store.mix = (action, payload) => {
-        payload
-            ? storeInstance.next({ type: action, payload })
-            : storeInstance.next({ type: action })
+      if (payload) {
+        return storeInstance.next({ type: action, payload })
+      }
+
+      storeInstance.next({ type: action })
     }
 
     /**
