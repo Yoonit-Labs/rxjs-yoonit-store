@@ -13,7 +13,7 @@ import createObserverHandlers from './observerHandlers'
 const store = async (modules, { persist = false }) => {
     const storeObservable = new Subject()
     const storeAccessors = createStoreAccessors(modules)
-    const persistedData = await loadPersistedData()
+    const persistedData = await loadPersistedData(storeAccessors.modules)
     const observerHandlers = createObserverHandlers(storeAccessors)
 
     // Load persisted data

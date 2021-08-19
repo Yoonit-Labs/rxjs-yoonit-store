@@ -56,3 +56,28 @@ export const rootAccessors = {
     }
   }
 }
+
+export const officeStore = {
+  office: {
+    state: {
+      name: ''
+    },
+    set: {
+      'officeData': function ({ mix }, user) {
+        mix('office/officeData', user)
+      }
+    },
+    get: {
+      'data': function ({ state }) {
+        return state
+      }
+    },
+    mix: {
+      'officeData': function (state, { payload }) {
+        state.user.name = payload.name
+
+        return state
+      }
+    }
+  },
+}
