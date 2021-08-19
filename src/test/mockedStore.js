@@ -28,7 +28,7 @@ export const storeWithModule = {
         return state
       }
     }
-  },
+  }
 }
 
 export const rootAccessors = {
@@ -79,5 +79,5 @@ export const officeStore = {
         return state
       }
     }
-  },
+  }
 }
