@@ -1,5 +1,5 @@
 import * as Yoox from './main'
-import {officeStore, rootAccessors, storeWithModule} from "./test/mockedStore"
+import {mixedStore, officeStore, rootAccessors, storeWithModule} from "./test/mockedStore"
 import Persist from './persist/main'
 import { delay } from "./test/helpers"
 
@@ -114,5 +114,23 @@ describe('Testing Store Persistence', () => {
     const myAnotherYoox = await Yoox.store(officeStore, { persist: true })
 
     console.log(myAnotherYoox.get('office/data'))
+  })
+})
+
+describe('Testing store with more then one module', () => {
+  it('Should create store with both states', async () => {
+    const myYoox = await Yoox.store(mixedStore, { persist: false })
+  })
+
+  it('Should set value to correct module', async () => {
+    const myYoox = await Yoox.store(mixedStore, { persist: false })
+
+    myYoox.set('user/personalData', { name: 'Gabriel Santiago', age: 25 })
+    myYoox.set('office/officeData', { name: 'Cyberlabs' })
+
+    expect(myYoox.state).toStrictEqual({
+      office: { name: 'Cyberlabs' },
+      user: { name: 'Gabriel Santiago', age: 25 }
+    })
   })
 })
