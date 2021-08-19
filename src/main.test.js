@@ -1,20 +1,17 @@
 import * as Yoox from './main'
-import { rootAccessors, storeWithModule } from "./test/mockedStore";
+import { rootAccessors, storeWithModule } from "./test/mockedStore"
 import Persist from './persist/main'
+import { delay } from "./test/helpers"
 
 describe('Testing Yoox modularized', () => {
   it('Should create yoox from object', async() => {
     const myYoox = await Yoox.store(storeWithModule, { persist: true })
 
-    const persistedData = await Persist.get()
-
-    console.log('persistedData', persistedData)
-
-    expect(myYoox.get('user/personalData')).toStrictEqual(persistedData.user)
+    expect(myYoox.get('user/personalData')).toStrictEqual({ name: '', age: ''})
   })
 
   it('Should set user name and age', async () => {
-    const myYoox = await Yoox.store(storeWithModule, { persist: true })
+    const myYoox = await Yoox.store(storeWithModule, { persist: false })
 
     myYoox.set('user/personalData', { name: 'Gabriel Rizzo', age: '25' })
 
@@ -24,13 +21,9 @@ describe('Testing Yoox modularized', () => {
   it('Should call another setter inside changeName', async () => {
     const myYoox = await Yoox.store(storeWithModule, { persist: true })
 
-    myYoox.set('user/personalData', { name: 'Gabriel Rizzo', age: '25' })
+    await myYoox.set('user/personalData', { name: 'Gabriel Rizzo', age: '25' })
 
-    myYoox.set('user/changeName', 'Yooni the Goat')
-
-    const foo = await Persist.get()
-
-    console.log('foo', foo)
+    await myYoox.set('user/changeName', 'Yooni the Goat')
 
     expect(myYoox.get('user/personalData')).toStrictEqual({ name: 'Yooni the Goat', age: '25' })
   })
@@ -42,23 +35,13 @@ describe('Testing Yoox modularized', () => {
 
     expect(myYoox.state.user).toStrictEqual({ name: 'Gabriel Rizzo', age: '25' })
   })
-
-  it('Should set inital value cache', async () => {
-    const myYoox = await Yoox.store(storeWithModule, { persist: true })
-
-    myYoox.set('user/personalData', { name: '' , age: '' })
-
-    const persistedValue = await Persist.get()
-
-    console.log('Persisted Value', persistedValue)
-    expect(persistedValue).toStrictEqual({ user: { name: '', age: '' } })
-  })
 })
 
 describe('Testing Yoox with root accessors',() => {
   it('Should create yoox object', async () => {
     const myYoox = await Yoox.store(rootAccessors, { persist: true })
 
+    await delay()
     const persistedValue = await Persist.get()
 
     expect(myYoox.get('userPersonalData')).toStrictEqual(persistedValue.user)
@@ -70,5 +53,46 @@ describe('Testing Yoox with root accessors',() => {
     myYoox.set('userPersonalData', { name: 'Gabriel Rizzo', age: '25' })
 
     expect(myYoox.get('userPersonalData')).toStrictEqual({ name: 'Gabriel Rizzo', age: '25' })
+  })
+})
+
+describe('Testing Store Persistence', () => {
+  it('Should save value', async () => {
+    const myYoox = await Yoox.store(storeWithModule, { persist: true })
+
+    await myYoox.set('user/personalData', { name: 'Gabriel Rizzo', age: '25' })
+
+    await delay()
+
+    const persistedValue = await Persist.get()
+    expect(persistedValue.user).toStrictEqual({ name: 'Gabriel Rizzo', age: '25' })
+  })
+
+  it('Should save latest value', async () => {
+    const myYoox = await Yoox.store(storeWithModule, { persist: true })
+
+    await myYoox.set('user/personalData', { name: 'Gabriel Rizzo', age: 25 })
+
+    await myYoox.set('user/personalData', { name: 'Yooni the Goat', age: 1 })
+
+    await delay()
+
+    const persistedValue = await Persist.get()
+
+    expect(persistedValue.user).toStrictEqual({name: 'Yooni the Goat', age: 1 })
+  })
+
+  it('Should set persisted value to start value', async () => {
+    const myYoox = await Yoox.store(storeWithModule, { persist: true })
+
+    await myYoox.set('user/personalData', { name: 'Gabriel Rizzo', age: 25 })
+
+    await myYoox.set('user/personalData', { name: '', age: '' })
+
+    await delay()
+
+    const persistedValue = await Persist.get()
+
+    expect(persistedValue.user).toStrictEqual({ name: '', age: '' })
   })
 })

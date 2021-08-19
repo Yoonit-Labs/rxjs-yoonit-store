@@ -3,7 +3,6 @@ import Persist from "../persist/main";
 
 function createObserverHandlers (storeAccessors) {
   const _storeAccessors = storeAccessors
-  const definedStateAtCreation = JSON.parse(JSON.stringify(storeAccessors.initialState))
 
   return {
     /**
@@ -19,16 +18,12 @@ function createObserverHandlers (storeAccessors) {
     },
 
     /**
-     * Persist
+     * Persist value inside store
      * @param {Object} accumulator
      * @param {Object} value
      * @returns {*}
      */
     persistStoreState: function (accumulator, value) {
-      if (isEqual(value, definedStateAtCreation)) {
-        return value
-      }
-
       Persist.set(value)
       return value
     }

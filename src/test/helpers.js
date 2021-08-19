@@ -23,7 +23,18 @@ const areArraysEquals = (firstArray, secondArray) => {
   return firstArray.sort().join('') === secondArray.sort().join('')
 }
 
+/**
+ * @description Delay function with 1 second timeout
+ * @returns {Promise<unknown>}
+ */
+const delay = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(), 1000)
+  })
+}
+
 export {
   areArraysEquals,
-  areAccessorsKeysEquals
+  areAccessorsKeysEquals,
+  delay
 }

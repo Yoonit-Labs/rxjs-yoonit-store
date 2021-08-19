@@ -30,11 +30,12 @@ function localDatabase () {
       try {
         const cachedData = await db.get(id)
 
+        // Force true ignores _rev
         const dbResponse = await db.put({
           _id: cachedData._id,
           _rev: cachedData._rev,
           ...payload
-        })
+        }, { force: true })
 
         return Promise.resolve(dbResponse)
       } catch (e) {
