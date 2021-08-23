@@ -19,7 +19,7 @@ After installing the project:
 ```
 import yourStore from './yourstore'
 
-Yoox.store(yourStore)
+Yoox.store(yourStore, { persist: true })
 ```
 
 ## store Object
@@ -147,4 +147,24 @@ Or if you wish, you can use as a modularized store as:
 
 When modularized, all methods will have the module prefix.
 Ie: PerseService.get('user/personalData')
+
+## Exported Methods
+
+- set('module/setterName') => ({ mix, set, get}, payload): Method that can be async. You should place your logic here, like http calls.
+
+- get('module/getterName') => ({ store, rootStore }): Retrieve data from store state. `store` key returns data from module, and if there is no module
+returns all data. `rootStore` returns all data from store, only available when store is modularized.
+
+- mix('module/mixerName') => (state, payload): Mutate store data. Returns all data from store, when you can mutate it (it's the impure store part).
+It's ESSENTIAL to return data, to not break store.
+
+
+## Persist Param
+
+- If you need some persist data, to improve app performance or to another objective.
+It's only necessary to pass { persist: true } to the second parameter on store, and it works like a charm.
+  
+- Persisted data is always returned on getters, when store is reinitialized.
+
+- When there is a change on store modules, persisted data is reseted, to not cause trouble with wrong store structure.
 
