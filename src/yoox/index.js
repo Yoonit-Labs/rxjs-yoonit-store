@@ -1,83 +1,52 @@
 import { Subject } from 'rxjs'
 import { scan, startWith, shareReplay } from 'rxjs/operators'
-import { createStoreAccessors } from '../utils'
+import { createStoreAccessors, loadPersistedData } from '../utils'
+import createStoreMethods from './methods'
+import createObserverHandlers from './observerHandlers'
+
 /**
  * Create a rxjs redux-like yoox
+ * @param {Object} modules
+ * @param {Object} config
  * @returns {Observable}
  */
-const store = (modules) => {
-    const storeInstance = new Subject()
+const store = async (modules, { persist = false }) => {
+    const storeObservable = new Subject()
     const storeAccessors = createStoreAccessors(modules)
-    /**
-     * Create a reducer according to module action by type
-     * @param {Observable} state
-     * @param {string} action
-     * @returns {*}
-     */
-    const reducer = (state = storeAccessors.initialState, action) => {
-        const DEFAULT_STATE = state => state
-        const handler = storeAccessors.setterList[action.type] || DEFAULT_STATE
-        return handler(state, action)
+    const persistedData = await loadPersistedData(storeAccessors.modules)
+    const observerHandlers = createObserverHandlers(storeAccessors)
+
+    // Load persisted data
+    if (persist && persistedData) {
+      storeAccessors.initialState = persistedData
     }
+
+    const persistStoreState = persist
+      ? observerHandlers.persistStoreState
+      : (acc, value) => { return value }
 
     /**
      * Creating a yoox instance with pipe rxjs methods
      * @type {Observable}
      */
-    const store = storeInstance.pipe(
+    const store = storeObservable.pipe(
         startWith({type: '__INIT__'}),
-        scan(reducer, undefined),
-        shareReplay(1)
+        scan(observerHandlers.reducer, storeAccessors.initialState),
+        shareReplay(1),
+        scan(persistStoreState, {})
     )
 
-    /**
-     * Creating a dispatch event to emulate redux-like design pattern
-     * @param action
-     */
-    store.dispatch = (action) => storeInstance.next(action)
+    const storeMethods = createStoreMethods({
+      store,
+      storeAccessors,
+      storeObservable
+    })
 
-    /**
-     * Create a get event as alias shorthand for returning get functions from modules
-     * @param {string} action
-     * @returns {*}
-     */
-    store.get = (action) => {
-      const isModularizedFunction = action.split('').includes('/')
-      let generalState = {}
+    store.get = storeMethods.get
 
-      if (isModularizedFunction) {
-        const moduleName = action.split('/')[0] || ''
-        generalState = { state: store.state[moduleName], rootState: store.state }
-      } else {
-        generalState.state = store.state
-      }
+    store.mix = storeMethods.mix
 
-      return storeAccessors.getterList[action]
-        ? storeAccessors.getterList[action](generalState)
-        : console.warn('[Perse SDK Store] The get method ', action, ' does not exist.')
-    }
-
-    /**
-     * Create a mix event as alias shorthand for next/dispatch
-     * @param {string} action
-     * @param {Object} payload
-     */
-    store.mix = (action, payload) => {
-        payload
-            ? storeInstance.next({ type: action, payload })
-            : storeInstance.next({ type: action })
-    }
-
-    /**
-     * Create a set action event
-     * @param {string} action
-     * @param {Object} payload
-     * @returns {*}
-     */
-    store.set = (action, payload) =>
-      storeAccessors.actionList[action]
-            ? storeAccessors.actionList[action](store, payload)
-            : console.warn('[Perse SDK Store] The set method ', action, ' does not exist.')
+    store.set = storeMethods.set
 
     /**
      * Create a subscription stream const to be reused

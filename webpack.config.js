@@ -1,5 +1,4 @@
 const path = require('path');
-const Dotenv = require('dotenv-webpack');
 
 module.exports = (env, argv) => {
   return {
@@ -23,13 +22,7 @@ module.exports = (env, argv) => {
     resolve: {
       extensions: ['.js']
     },
-    plugins: [
-      new Dotenv({
-        path: './.env.'+argv.mode,
-        allowEmptyValues: true,
-        systemvars: true
-      })
-    ],
+    plugins: [],
     devtool: 'inline-source-map'
   }
 };

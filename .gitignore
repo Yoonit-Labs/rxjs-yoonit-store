@@ -3,7 +3,7 @@ node_modules/
 dist/
 coverage/
 npm/
-
+state/
 # local env files
 .env.local
 .env.*.local
