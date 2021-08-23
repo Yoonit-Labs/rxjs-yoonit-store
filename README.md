@@ -16,7 +16,13 @@ After installing the project:
 3- Then, run `npm run watch` on Perse directory
 
 ## How to use
+```
+import yourStore from './yourstore'
 
+Yoox.store(yourStore)
+```
+
+## store Object
 It's only needed to create an object with keys: set, get, mix and state.
 <br>
 
