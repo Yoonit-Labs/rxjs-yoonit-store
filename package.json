@@ -1,7 +1,7 @@
 {
-  "name": "@cyberlabsai/perse-store",
+  "name": "@cyberlabsai/yoox",
   "version": "0.0.1",
-  "description": "The official store library for Perse, by Cyberlabs.",
+  "description": "The official Cyberlabs store library.",
   "main": "dist/bundle.js",
   "files": [
     "dist/"

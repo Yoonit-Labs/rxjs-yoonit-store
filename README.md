@@ -1,4 +1,4 @@
-# perse-store
+# Yoox
 
 ## How to run the project
 ``
@@ -11,7 +11,7 @@ After installing the project:
 
 1- At the root of Perse store directory, run: `npm link`
 
-2- In the project that you want to use Perse store, run: `npm link @cyberlabsai/perse-store`
+2- In the project that you want to use Perse store, run: `npm link @cyberlabsai/yoox`
 
 3- Then, run `npm run watch` on Perse directory
 

@@ -100,8 +100,6 @@ describe('Testing Store Persistence', () => {
     const myYoox = await Yoox.store(rootAccessors, { persist: true })
 
     const persistedValue = await myYoox.get('userPersonalData')
-
-    console.log(persistedValue)
   })
 
   it('Store with different modules should not load persisted data', async () => {
