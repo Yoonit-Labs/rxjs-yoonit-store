@@ -1,4 +1,4 @@
-# perse-sdk-js
+# perse-store
 
 ## How to run the project
 ``
@@ -9,86 +9,136 @@ npm run serve
 ## How to build and use it on another project
 After installing the project:
 
-1- At the root of Perse sdk directory, run: `npm link`
+1- At the root of Perse store directory, run: `npm link`
 
-2- In the project that you want to use Perse sdk, run: `npm link @cyberlabsai/perse-sdk-js`
+2- In the project that you want to use Perse store, run: `npm link @cyberlabsai/perse-store`
 
 3- Then, run `npm run watch` on Perse directory
 
-## Authenticate
+## How to use
 
-Signature: `Perse.face.authenticate(personFirstImage, personSecondImage)`
-
-| Parameter             | Description     | Type |
-| --------------        |:---------------:| ----:|
-| personFirstImage      | An image file   | File or Blob |
-| personSecondImage     | An image file   | File or Blob |
-
-Returns:
+It's only needed to create an object with keys: set, get, mix and state.
 <br>
 
-| Property      | Description                         | Type    |
-| ------------- |:-----------------------------------:| -------:|
-| status        | Represents if authenticated succeed | boolean |
-| code          | Success or failure code             | string  |
-| message       | Feedback message                    | string  |
+Ie: 
+```
+{
+   state:{
+      user:{
+         name:'',
+         age:''
+      }
+   },
+   set:{
+      'userPersonalData':function ({
+         mix
+      },
+      user){
+         mix('userPersonalData',
+         user)
+      }
+   },
+   get:{
+      'userPersonalData':function ({
+         state
+      }){
+         return state.user
+      }
+   },
+   mix:{
+      'userPersonalData':function (state,
+      {
+         payload
+      }){
+         state.user = payload
 
+      return state
+      }
+   }
+}
+```
 
-## Compare
+Or if you wish, you can use as a modularized store as:
 
-Signature: `Perse.face.compare(personFirstImage, personSecondImage)`
+```
+{
+   office:{
+      state:{
+         name:''
+      },
+      set:{
+         'officeData':function ({
+            mix
+         },
+         user){
+            mix('office/officeData',
+            user)
+         }
+      },
+      get:{
+         'data':function ({
+            state
+         }){
+            return state
+         }
+      },
+      mix:{
+         'officeData':function (state,
+         {
+            payload
+         }){
+            state.office.name = payload.name
 
-| Parameter             | Description     | Type |
-| --------------        |:---------------:| ----:|
-| personFirstImage      | An image file   | File or Blob |
-| personSecondImage     | An image file   | File or Blob |
+        return state
+         }
+      }
+   },
+   user:{
+      state:{
+         name:'',
+         age:''
+      },
+      set:{
+         'personalData':function ({
+            mix
+         },
+         user){
+            mix('user/personalData',
+            user)
+         },
+         'changeName':function ({
+            set,
+            get
+         },
+         userName){
+            const user ={
+               ...get('user/personalData')
+            }user.name = userName
+        set('user/personalData',
+            user)
+         }
+      },
+      get:{
+         'personalData':function ({
+            state
+         }){
+            return state
+         }
+      },
+      mix:{
+         'personalData':function (state,
+         {
+            payload
+         }){
+            state.user.name = payload.name
+        state.user.age = payload.age
 
-Returns:
-<br>
+        return state
+         }
+      }
+   }
+```
 
-| Property      | Description                                                    | Type             |
-| ------------- |:--------------------------------------------------------------:| ----------------:|
-| status        | Represents if request succeed                                  | boolean          |
-| similarity    | A number that represents the similarity gradation              | number (0-100)   |
-| code          | Success or failure code                                        | string           |
-| image_tokens  | An Array with array unique identifier generated from Perse API | `Array<string>`  |
-| time_taken    | Time taken to fulfill request                                  | number           |
-| message       | Feedback message                                               | string           |
+When modularized, all methods will have the module prefix.
+Ie: PerseService.get('user/personalData')
 
-## Detect
-
-Signature: `Perse.face.detect(personImage)`
-
-| Parameter             | Description     | Type |
-| --------------        |:---------------:| ----:|
-| personImage           | An image file   | File or Blob |
-
-Returns:
-<br>
-| Property      | Description                                   | Type    |
-| ------------- |:--------------------------------------------: | -------:|
-| status        | Represents if authenticated succeed           | boolean |
-| code          | Success or failure code                       | string  |
-| message       | Feedback message                              | string  |
-| faces         | Faces detected by Parse. see more             | array   |
-| image_metrics | An object with image quality data. see more   | object  |
-| image_token   | A unique image identifier                     | string  |
-| time_taken    | Time taken to fulfill request                 | number  |
-| total_faces   | Total faces that are on image                 | number  |
-
-## Validate
-
-Signature: `Perse.face.validate(personImage)`
-
-| Parameter             | Description     | Type |
-| --------------        |:---------------:| ----:|
-| personImage           | An image file   | File or Blob |
-
-Returns:
-<br>
-
-| Property      | Description                                   | Type    |
-| ------------- |:--------------------------------------------: | -------:|
-| status        | Represents if authenticated succeed           | boolean |
-| code          | Success or failure code                       | string  |
-| message       | Feedback message                              | array   |
