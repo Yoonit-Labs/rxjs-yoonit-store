@@ -1,7 +1,7 @@
 {
   "name": "@cyberlabsai/perse-store",
-  "version": "0.0.1-alpha.4",
-  "description": "The official JavaScript SDK for Perse, by Cyberlabs.",
+  "version": "0.0.1",
+  "description": "The official store library for Perse, by Cyberlabs.",
   "main": "dist/bundle.js",
   "files": [
     "dist/"
@@ -17,7 +17,6 @@
     "watch:prod": "webpack --watch --progress --mode production"
   },
   "dependencies": {
-    "lodash.isequal": "^4.5.0",
     "pouchdb": "^7.2.2",
     "rxjs": "^6.6.6"
   },

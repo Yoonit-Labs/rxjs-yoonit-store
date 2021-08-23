@@ -1,4 +1,3 @@
-import isEqual from "lodash.isequal";
 import Persist from "../persist/main";
 
 function createObserverHandlers (storeAccessors) {
