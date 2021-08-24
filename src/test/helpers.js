@@ -29,7 +29,7 @@ const areArraysEquals = (firstArray, secondArray) => {
  */
 const delay = () => {
   return new Promise((resolve) => {
-    setTimeout(() => resolve(), 1000)
+    setTimeout(() => resolve(), 3000)
   })
 }
 

@@ -10,31 +10,35 @@ import createObserverHandlers from './observerHandlers'
  * @param {Object} config
  * @returns {Observable}
  */
-const store = async (modules, { persist = false }) => {
+const store = (modules, { persist = false, onLoad = () => ({}) }) => {
     const storeObservable = new Subject()
     const storeAccessors = createStoreAccessors(modules)
-    const persistedData = await loadPersistedData(storeAccessors.modules)
     const observerHandlers = createObserverHandlers(storeAccessors)
 
+  const persistStoreState = persist
+    ? observerHandlers.persistStoreState
+    : (acc, value) => { return value }
+
+  /**
+   * Creating a yoox instance with pipe rxjs methods
+   * @type {Observable}
+   */
+  const store = storeObservable.pipe(
+    startWith({type: '__INIT__'}),
+    scan(observerHandlers.reducer, storeAccessors.initialState),
+    shareReplay(1),
+    scan(persistStoreState, {})
+  )
+
     // Load persisted data
-    if (persist && persistedData) {
-      storeAccessors.initialState = persistedData
+    if (persist) {
+      loadPersistedData(storeAccessors.modules).then((persistedState) => {
+        if (!persistedState) return
+
+        storeAccessors.initialState = persistedState
+        onLoad()
+      })
     }
-
-    const persistStoreState = persist
-      ? observerHandlers.persistStoreState
-      : (acc, value) => { return value }
-
-    /**
-     * Creating a yoox instance with pipe rxjs methods
-     * @type {Observable}
-     */
-    const store = storeObservable.pipe(
-        startWith({type: '__INIT__'}),
-        scan(observerHandlers.reducer, storeAccessors.initialState),
-        shareReplay(1),
-        scan(persistStoreState, {})
-    )
 
     const storeMethods = createStoreMethods({
       store,

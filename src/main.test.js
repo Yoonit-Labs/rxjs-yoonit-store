@@ -38,15 +38,6 @@ describe('Testing Yoox modularized', () => {
 })
 
 describe('Testing Yoox with root accessors',() => {
-  it('Should create yoox object', async () => {
-    const myYoox = await Yoox.store(rootAccessors, { persist: true })
-
-    await delay()
-    const persistedValue = await Persist.get()
-
-    expect(myYoox.get('userPersonalData')).toStrictEqual(persistedValue.user)
-  })
-
   it('Should set user data to store', async () => {
     const myYoox = await Yoox.store(rootAccessors, { persist: true })
 
@@ -59,6 +50,8 @@ describe('Testing Yoox with root accessors',() => {
 describe('Testing Store Persistence', () => {
   it('Should save value', async () => {
     const myYoox = await Yoox.store(storeWithModule, { persist: true })
+
+    await delay()
 
     await myYoox.set('user/personalData', { name: 'Gabriel Rizzo', age: '25' })
 
@@ -96,12 +89,6 @@ describe('Testing Store Persistence', () => {
     expect(persistedValue.user).toStrictEqual({ name: '', age: '' })
   })
 
-  it('foo', async () => {
-    const myYoox = await Yoox.store(rootAccessors, { persist: true })
-
-    const persistedValue = await myYoox.get('userPersonalData')
-  })
-
   it('Store with different modules should not load persisted data', async () => {
     const myYoox = await Yoox.store(storeWithModule, { persist: true })
 
@@ -111,7 +98,7 @@ describe('Testing Store Persistence', () => {
 
     const myAnotherYoox = await Yoox.store(officeStore, { persist: true })
 
-    console.log(myAnotherYoox.get('office/data'))
+    expect(myAnotherYoox.get('office/data')).toStrictEqual({ name: '' })
   })
 })
 
