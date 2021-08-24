@@ -1,4 +1,4 @@
-# Yoox
+# Yooox
 
 ## How to run the project
 ``
