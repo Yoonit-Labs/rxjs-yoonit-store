@@ -1,5 +1,7 @@
 # Yoox
 
+# MOVED TO GITHUB: [rxjs-yoonit-store](https://github.com/Yoonit-Labs/rxjs-yoonit-store)
+
 ## How to run the project
 ``
 npm install
