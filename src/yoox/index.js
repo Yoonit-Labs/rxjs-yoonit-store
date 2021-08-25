@@ -25,7 +25,7 @@ const store = (modules, { persist = false, onLoad = () => ({}) }) => {
    */
   const store = storeObservable.pipe(
     startWith({type: '__INIT__'}),
-    scan(observerHandlers.reducer, storeAccessors.initialState),
+    scan(observerHandlers.mixerHandler, storeAccessors.initialState),
     shareReplay(1),
     scan(persistStoreState, {})
   )
