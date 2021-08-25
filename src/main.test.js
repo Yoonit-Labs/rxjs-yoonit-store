@@ -198,10 +198,22 @@ describe('Testing Persist getter', () => {
 
 describe('Testing clear persist', () => {
   it('Should clear stored value', async () => {
-    await Persist.set({ value: true })
+    await Persist.set({ foo: true })
 
     const clearPersistResult = await Persist.clear()
 
     expect(clearPersistResult).toBeTruthy()
+  })
+
+  it('Should throw NotFoundError when trying to retrieve data after deletion', async () => {
+    try {
+      await Persist.set({ foo: true })
+
+      await Persist.clear()
+
+      await Persist.get()
+    } catch (e) {
+      expect(e instanceof NotFoundException).toBeTruthy()
+    }
   })
 })
