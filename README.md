@@ -19,7 +19,7 @@ After installing the project:
 ```
 import yourStore from './yourstore'
 
-Yoox.store(yourStore, { persist: true })
+Yoox.store(yourStore, { persist: true, onLoad: hideLoad })
 ```
 
 ## store Object
@@ -167,4 +167,6 @@ It's only necessary to pass { persist: true } to the second parameter on store, 
 - Persisted data is always returned on getters, when store is reinitialized.
 
 - When there is a change on store modules, persisted data is reseted, to not cause trouble with wrong store structure.
+
+- It's highly recommended to use onLoad method to guarantee that persisted data have been loaded to Yoox state. Ie: Show load until onLoad callback is called.
 
