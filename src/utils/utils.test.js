@@ -31,7 +31,7 @@ describe('Testing function createStoreAccessors', () => {
       getterList: [
         'user/personalData'
       ],
-      setterList: [
+      mixerList: [
         'user/personalData'
       ],
       initialState: [
@@ -52,7 +52,7 @@ describe('Testing function createStoreAccessors', () => {
       getterList: [
         'userPersonalData'
       ],
-      setterList: [
+      mixerList: [
         'userPersonalData'
       ],
       initialState: [
