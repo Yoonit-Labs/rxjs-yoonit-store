@@ -1,5 +1,5 @@
 import PouchDB from 'pouchdb'
-import { catchError } from "../exceptions";
+import { catchError, ConflictException } from "../exceptions";
 
 function localDatabase () {
   const db = new PouchDB('state')
