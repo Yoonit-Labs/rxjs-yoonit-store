@@ -1,9 +1,23 @@
 import { localDatabase } from "../db";
-import { NotFoundException } from "../exceptions";
+import {ConflictException, NotFoundException} from "../exceptions";
 
 function CreatePersistence () {
   const db = localDatabase()
 
+  async function create (payload) {
+    try {
+      await db.create(payload)
+      return Promise.resolve(true)
+    } catch (e) {
+      if (e instanceof ConflictException) {
+        console.log(`Aqui ow`)
+        await db.update(payload)
+
+        return Promise.resolve(true)
+      }
+    }
+
+  }
   return {
     /**
      * @method get
@@ -27,8 +41,7 @@ function CreatePersistence () {
         return Promise.resolve(true)
       } catch (e) {
         if (e instanceof NotFoundException) {
-          await db.create(payload)
-          return Promise.resolve(true)
+          return create(payload)
         }
 
         return Promise.reject(e)

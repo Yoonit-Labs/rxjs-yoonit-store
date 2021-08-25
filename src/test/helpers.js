@@ -24,7 +24,7 @@ const areArraysEquals = (firstArray, secondArray) => {
 }
 
 /**
- * @description Delay function with 1 second timeout
+ * @description Delay function with 3 second timeout
  * @returns {Promise<unknown>}
  */
 const delay = () => {
