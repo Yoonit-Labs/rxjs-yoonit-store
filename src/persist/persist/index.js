@@ -10,7 +10,6 @@ function CreatePersistence () {
       return Promise.resolve(true)
     } catch (e) {
       if (e instanceof ConflictException) {
-        console.log(`Aqui ow`)
         await db.update(payload)
 
         return Promise.resolve(true)
