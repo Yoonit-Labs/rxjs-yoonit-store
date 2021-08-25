@@ -24,8 +24,6 @@ export const storeWithModule = {
       'personalData': function (state, { payload }) {
         state.user.name = payload.name
         state.user.age = payload.age
-
-        return state
       }
     }
   }
@@ -51,8 +49,6 @@ export const rootAccessors = {
   mix: {
     'userPersonalData': function (state, { payload }) {
       state.user = payload
-
-      return state
     }
   }
 }
@@ -75,8 +71,6 @@ export const officeStore = {
     mix: {
       'officeData': function (state, { payload }) {
         state.user.name = payload.name
-
-        return state
       }
     }
   }
@@ -100,8 +94,6 @@ export const mixedStore = {
     mix: {
       'officeData': function (state, { payload }) {
         state.office.name = payload.name
-
-        return state
       }
     }
   },
@@ -130,8 +122,6 @@ export const mixedStore = {
       'personalData': function (state, { payload }) {
         state.user.name = payload.name
         state.user.age = payload.age
-
-        return state
       }
     }
   }

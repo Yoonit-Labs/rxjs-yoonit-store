@@ -12,8 +12,9 @@ function createObserverHandlers (storeAccessors) {
      */
     mixerHandler: function (state, action) {
       const DEFAULT_STATE = state => state
-      const handler = _storeAccessors.setterList[action.type] || DEFAULT_STATE
-      return handler(state, action)
+      const handler = _storeAccessors.mixerList[action.type] || DEFAULT_STATE
+      handler(state, action)
+      return state
     },
 
     /**
