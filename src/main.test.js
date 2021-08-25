@@ -204,4 +204,16 @@ describe('Testing clear persist', () => {
 
     expect(clearPersistResult).toBeTruthy()
   })
+
+  it('Should throw NotFoundError when trying to retrieve data after deletion', async () => {
+    try {
+      await Persist.set({ foo: true })
+
+      await Persist.clear()
+
+      await Persist.get()
+    } catch (e) {
+      expect(e instanceof NotFoundException).toBeTruthy()
+    }
+  })
 })

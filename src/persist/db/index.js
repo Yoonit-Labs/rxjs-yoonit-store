@@ -61,16 +61,20 @@ function localDatabase () {
     },
     /**
      * @method remove
-     * @description Proxy PouchDB remove to abstract lib implementation details. Remove stored data.
+     * @description Proxy PouchDB remove to abstract lib implementation details. Remove stored data with all its revisions.
      * @returns {Promise<*>}
      */
     remove: async function () {
       try {
-        const cachedData = await db.allDocs()
+        const cachedData = await db.get(id, {
+          revs: true,
+          open_revs: 'all'
+        })
 
-        await Promise.all(cachedData.rows.map((doc) => {
-          console.log(doc)
-          return db.remove(doc.id, doc.value.rev)
+        await Promise.all(cachedData.map((doc) => {
+          if (!doc.ok) return
+
+          return db.remove(doc.ok._id, doc.ok._rev)
         }))
 
         return Promise.resolve(true)
