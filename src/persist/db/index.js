@@ -2,7 +2,7 @@ import PouchDB from 'pouchdb'
 import { catchError, ConflictException } from "../exceptions";
 
 function localDatabase () {
-  const db = new PouchDB('state')
+  const db = new PouchDB('state', { revs_limit: 1 })
   const id = 'global_state'
 
   return {
@@ -66,9 +66,14 @@ function localDatabase () {
      */
     remove: async function () {
       try {
-        const cachedData = await db.get(id)
+        const cachedData = await db.allDocs()
 
-        return db.remove(cachedData)
+        await Promise.all(cachedData.rows.map((doc) => {
+          console.log(doc)
+          return db.remove(doc.id, doc.value.rev)
+        }))
+
+        return Promise.resolve(true)
       } catch (e) {
         throw catchError(e)
       }

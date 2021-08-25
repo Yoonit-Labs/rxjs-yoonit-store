@@ -198,7 +198,7 @@ describe('Testing Persist getter', () => {
 
 describe('Testing clear persist', () => {
   it('Should clear stored value', async () => {
-    await Persist.set({ value: true })
+    await Persist.set({ foo: true })
 
     const clearPersistResult = await Persist.clear()
 
