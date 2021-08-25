@@ -1,4 +1,5 @@
 import { Persist } from './main.js'
+import { delay } from "../test/helpers";
 import { NotFoundException } from "./exceptions";
 
 describe('Testing Persist setter', () => {
@@ -13,6 +14,8 @@ describe('Testing Persist setter', () => {
     })
 
     expect(cacheResult).toBeTruthy()
+
+    await delay()
   })
 
   it('Should update data on store', async () => {
@@ -39,6 +42,8 @@ describe('Testing Persist setter', () => {
     const cachedValue = await Persist.get()
 
     expect(cachedValue).toStrictEqual(expectedValue)
+
+    await delay()
   })
 })
 
@@ -58,6 +63,8 @@ describe('Testing Persist getter', () => {
     const cachedData = await Persist.get()
 
     expect(cachedData).toStrictEqual(expectedValue)
+
+    await delay()
   })
 
   it('Should return error when there is no cached value', async () => {
@@ -69,6 +76,8 @@ describe('Testing Persist getter', () => {
       await Persist.clear()
 
       await Persist.get()
+
+      await delay()
     } catch (e) {
       expect(e instanceof NotFoundException).toBeTruthy()
     }
@@ -82,6 +91,8 @@ describe('Testing clear persist', () => {
     const clearPersistResult = await Persist.clear()
 
     expect(clearPersistResult).toBeTruthy()
+
+    await delay()
   })
 
   it('Should return false if persist is empty', async () => {
@@ -92,5 +103,7 @@ describe('Testing clear persist', () => {
     const cacheClearResult = await Persist.clear()
 
     expect(cacheClearResult).toBeFalsy()
+
+    await delay()
   })
 })
