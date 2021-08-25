@@ -68,9 +68,7 @@ function localDatabase () {
       try {
         const cachedData = await db.get(id)
 
-        const dbResponse = await db.remove(cachedData)
-
-        return Promise.resolve(dbResponse)
+        return db.remove(cachedData)
       } catch (e) {
         throw catchError(e)
       }
