@@ -19,7 +19,7 @@ After installing the project:
 ```
 import yourStore from './yourstore'
 
-Yoox.store(yourStore, { persist: true, onLoad: hideLoad })
+const myStore = Yoox.store(yourStore, { persist: true, onLoad: hideLoad })
 ```
 
 ## store Object
