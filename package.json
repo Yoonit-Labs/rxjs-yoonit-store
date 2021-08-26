@@ -1,7 +1,7 @@
 {
-  "name": "@yoonit/yoox",
+  "name": "@yoonit/yoox-store-js",
   "version": "0.0.1",
-  "description": "The official Cyberlabs store library.",
+  "description": "The official Cyberlabs Javascript global store library.",
   "main": "dist/bundle.js",
   "files": [
     "dist/"

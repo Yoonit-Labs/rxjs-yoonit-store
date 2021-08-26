@@ -1,8 +1,8 @@
 import PouchDB from 'pouchdb'
-import { catchError } from "../exceptions";
+import { catchError, ConflictException } from "../exceptions";
 
 function localDatabase () {
-  const db = new PouchDB('state')
+  const db = new PouchDB('state', { revs_limit: 1 })
   const id = 'global_state'
 
   return {
@@ -61,16 +61,23 @@ function localDatabase () {
     },
     /**
      * @method remove
-     * @description Proxy PouchDB remove to abstract lib implementation details. Remove stored data.
+     * @description Proxy PouchDB remove to abstract lib implementation details. Remove stored data with all its revisions.
      * @returns {Promise<*>}
      */
     remove: async function () {
       try {
-        const cachedData = await db.get(id)
+        const cachedData = await db.get(id, {
+          revs: true,
+          open_revs: 'all'
+        })
 
-        const dbResponse = await db.remove(cachedData)
+        await Promise.all(cachedData.map((doc) => {
+          if (!doc.ok) return
 
-        return Promise.resolve(dbResponse)
+          return db.remove(doc.ok._id, doc.ok._rev)
+        }))
+
+        return Promise.resolve(true)
       } catch (e) {
         throw catchError(e)
       }

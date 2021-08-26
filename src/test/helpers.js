@@ -7,10 +7,10 @@
 const areAccessorsKeysEquals = (expectedAccessors, generatedAccessors) => {
   const actionListMatched = areArraysEquals(expectedAccessors.actionList, Object.keys(generatedAccessors.actionList))
   const getterListMatched = areArraysEquals(expectedAccessors.getterList, Object.keys(generatedAccessors.getterList))
-  const setterListMatched = areArraysEquals(expectedAccessors.setterList, Object.keys(generatedAccessors.setterList))
+  const mixerListMatched = areArraysEquals(expectedAccessors.mixerList, Object.keys(generatedAccessors.mixerList))
   const initialStateMatched = areArraysEquals(expectedAccessors.initialState, Object.keys(generatedAccessors.initialState))
 
-  return actionListMatched && getterListMatched && setterListMatched && initialStateMatched
+  return actionListMatched && getterListMatched && mixerListMatched && initialStateMatched
 }
 
 /**
@@ -24,7 +24,7 @@ const areArraysEquals = (firstArray, secondArray) => {
 }
 
 /**
- * @description Delay function with 1 second timeout
+ * @description Delay function with 3 second timeout
  * @returns {Promise<unknown>}
  */
 const delay = () => {

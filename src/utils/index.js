@@ -18,7 +18,7 @@ function modularizeFunctionNames (accessors, moduleName) {
 /**
  * @description Create store accessors
  * @param {Object} modules
- * @returns {{setterList: *, getterList, initialState, actionList}|{setterList, getterList, initialState, actionList: {}, modules}}
+ * @returns {{mixerList: *, getterList, initialState, actionList}|{mixerList, getterList, initialState, actionList: {}, modules}}
  */
 function createStoreAccessors (modules) {
   const moduleKeys = Object.keys(modules)
@@ -27,23 +27,23 @@ function createStoreAccessors (modules) {
     moduleKeys.includes('mix') &&
     moduleKeys.includes('state')
 
-  let initialState, getterList, setterList, actionList = {}
+  let initialState, getterList, mixerList, actionList = {}
 
   if (isAccessorsOnRoot) {
     return {
       getterList: modules.get,
       actionList: modules.set,
       initialState: modules.state,
-      setterList: modules.mix
+      mixerList: modules.mix
     }
   }
 
   const modulesKeys = []
-  // Populate setterList and initialState object according to modules
+  // Populate mixerList and initialState object according to modules
   moduleKeys.forEach((moduleKey) => {
     initialState = { ...initialState, [moduleKey]: { ...modules[moduleKey].state } }
     getterList = { ...getterList, ...modularizeFunctionNames(modules[moduleKey].get, moduleKey) }
-    setterList = { ...setterList, ...modularizeFunctionNames(modules[moduleKey].mix, moduleKey) }
+    mixerList = { ...mixerList, ...modularizeFunctionNames(modules[moduleKey].mix, moduleKey) }
     actionList = { ...actionList, ...modularizeFunctionNames(modules[moduleKey].set, moduleKey) }
     modulesKeys.push(moduleKey)
   })
@@ -51,7 +51,7 @@ function createStoreAccessors (modules) {
   return {
     initialState,
     getterList,
-    setterList,
+    mixerList,
     actionList,
     modules: modulesKeys
   }
@@ -79,7 +79,6 @@ const loadPersistedData = async (modules) => {
 
     return false
   } catch (e) {
-    console.log(e)
     return false
   }
 }
