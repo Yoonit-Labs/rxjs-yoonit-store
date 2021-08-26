@@ -2,27 +2,18 @@
 
 ## How to run the project
 ``
-npm install
-npm run serve
+npm install @yoonit/yoox
 ``
-
-## How to build and use it on another project
-After installing the project:
-
-1- At the root of Perse store directory, run: `npm link`
-
-2- In the project that you want to use Perse store, run: `npm link @cyberlabsai/yoox`
-
-3- Then, run `npm run watch` on Perse directory
 
 ## How to use
 ```
+import Yoox from @yoonit/yoox
 import yourStore from './yourstore'
 
 Yoox.store(yourStore, { persist: true })
 ```
 
-## store Object
+## store object
 It's only needed to create an object with keys: set, get, mix and state.
 <br>
 
