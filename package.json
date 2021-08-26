@@ -1,12 +1,16 @@
 {
   "name": "@yoonit/yoox-store-js",
-  "version": "0.0.1",
+  "version": "0.0.1-alpha.3",
   "description": "The official Cyberlabs Javascript global store library.",
   "main": "dist/bundle.js",
   "files": [
     "dist/"
   ],
-  "keywords": ["store", "manage", "global"],
+  "keywords": [
+    "store",
+    "manage",
+    "global"
+  ],
   "scripts": {
     "serve": "webpack-dev-server --mode development --open",
     "serve:prod": "webpack-dev-server --mode production --open",
