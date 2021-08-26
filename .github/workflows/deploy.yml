@@ -18,7 +18,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
         with:
-          ref: master
+          ref: main
       # SETUP NODE ENV W/ NPM PUBLIC REGISTRY
       - name: Setup Node Env
         uses: actions/setup-node@v2
