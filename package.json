@@ -6,6 +6,7 @@
   "files": [
     "dist/"
   ],
+  "keywords": ['store', 'manage', 'global'],
   "scripts": {
     "serve": "webpack-dev-server --mode development --open",
     "serve:prod": "webpack-dev-server --mode production --open",
