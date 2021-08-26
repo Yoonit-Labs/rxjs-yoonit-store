@@ -1,5 +1,5 @@
 {
-  "name": "@cyberlabsai/yoox",
+  "name": "@yoonit/yoox",
   "version": "0.0.1",
   "description": "The official Cyberlabs store library.",
   "main": "dist/bundle.js",
