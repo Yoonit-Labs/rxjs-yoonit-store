@@ -2,7 +2,7 @@
 
 ## How to run the project
 ``
-npm install @yoonit/yoox
+npm install @yoonit/yoox-store-js
 ``
 
 ## How to use

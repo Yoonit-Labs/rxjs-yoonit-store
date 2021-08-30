@@ -6,6 +6,11 @@
   "files": [
     "dist/"
   ],
+  "keywords": [
+    "store",
+    "manage",
+    "global"
+  ],
   "scripts": {
     "serve": "webpack-dev-server --mode development --open",
     "serve:prod": "webpack-dev-server --mode production --open",
@@ -31,6 +36,7 @@
     "jest-fetch-mock": "^3.0.3",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.2"
+    "webpack-dev-server": "^3.11.2",
+    "webpack-node-externals": "^3.0.0"
   }
 }
