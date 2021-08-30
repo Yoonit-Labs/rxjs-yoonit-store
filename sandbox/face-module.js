@@ -1,12 +1,4 @@
-console.log('[Bundle Loaded] ', Perse.persistStoreState())
-
-// async function testingIt () {
-//   const foo = await Cache.Persist.get()
-//
-//   console.log('response', foo)
-// }
-//
-// testingIt()
+console.log('[Bundle Loaded] ', window)
 
 /**
  * STORE MODULE USAGE:
