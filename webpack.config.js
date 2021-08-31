@@ -1,8 +1,10 @@
 const path = require('path');
+const nodeExternals = require('webpack-node-externals');
 
 module.exports = (env, argv) => {
   return {
     entry: './src/main.js',
+    externals: [nodeExternals()],
     output: {
       path: path.resolve(__dirname, "dist"),
       filename: "bundle.js",
