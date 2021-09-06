@@ -146,8 +146,7 @@ Ie: PerseService.get('user/personalData')
 - get('module/getterName') => ({ store, rootStore }): Retrieve data from store state. `store` key returns data from module, and if there is no module
 returns all data. `rootStore` returns all data from store, only available when store is modularized.
 
-- mix('module/mixerName') => (state, payload): Mutate store data. Returns all data from store, where you can mutate it (it's the impure store part).
-It's ESSENTIAL to return data, to not break store.
+- mix('module/mixerName') => (state, { action, payload }): Mutate store data. Returns all data from store, where you can mutate it (it's the impure store part).
 
 
 ## Persist Param
