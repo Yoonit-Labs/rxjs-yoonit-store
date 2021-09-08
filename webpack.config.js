@@ -1,5 +1,6 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = (env, argv) => {
   return {
@@ -24,7 +25,9 @@ module.exports = (env, argv) => {
     resolve: {
       extensions: ['.js']
     },
-    plugins: [],
+    plugins: [
+      new BundleAnalyzerPlugin()
+    ],
     devtool: 'inline-source-map'
   }
 };
