@@ -21,7 +21,7 @@
     "watch": "webpack --watch --progress --mode development",
     "watch:prod": "webpack --watch --progress --mode production"
   },
-  "dependencies": {
+  "peerDependencies": {
     "pouchdb": "^7.2.2",
     "rxjs": "^6.6.6"
   },
