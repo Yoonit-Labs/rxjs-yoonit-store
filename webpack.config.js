@@ -3,14 +3,22 @@ const nodeExternals = require('webpack-node-externals');
 
 module.exports = (env, argv) => {
   return {
-    entry: './src/main.js',
     externals: [nodeExternals()],
+    entry: {
+      main: './src/main.js',
+      vuePlugin: './src/plugins/vue.js'
+    },
     output: {
       path: path.resolve(__dirname, "dist"),
-      filename: "bundle.js",
+      filename: "[name].bundle.js",
       library: "Yoox",
       libraryTarget: "umd",
       globalObject: "this"
+    },
+    optimization: {
+      splitChunks: {
+        chunks: 'all',
+      },
     },
     module: {
       rules: [
