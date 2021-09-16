@@ -1,5 +1,6 @@
 import { store } from './yoox'
+import { VueInstall } from "./plugins/vue"
 
-export default { store }
+export default { store, VueInstall }
 
-export { store }
+export { store, VueInstall }
