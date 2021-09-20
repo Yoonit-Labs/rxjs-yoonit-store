@@ -3,9 +3,8 @@ export const VueNextInstall = {
     app.mixin({
       data () {
         return {
-          localStore: undefined,
           localState: {},
-          Yoox: undefined
+          __Yoox: undefined
         }
       },
       created () {
@@ -13,9 +12,8 @@ export const VueNextInstall = {
          * Observe to update yoox and state on changes
          */
         storeInstance.observe((state) => {
-          this.localStore = { ...storeInstance }
           this.localState = { ...state }
-          this.Yoox = { ...storeInstance }
+          this.__Yoox = { ...storeInstance }
         })
       },
       computed: {
@@ -34,7 +32,7 @@ export const VueNextInstall = {
          * @returns {*}
          */
         get (payload) {
-          return this.Yoox.get(payload)
+          return this.__Yoox.get(payload)
         },
 
         /**
@@ -44,7 +42,7 @@ export const VueNextInstall = {
          * @returns {*}
          */
         mix (action, payload) {
-          return this.Yoox.mix(action, payload)
+          return this.__Yoox.mix(action, payload)
         },
 
         /**
@@ -54,7 +52,7 @@ export const VueNextInstall = {
          * @returns {*}
          */
         set (action, payload) {
-          return this.Yoox.set(action, payload)
+          return this.__Yoox.set(action, payload)
         }
       }
     })
