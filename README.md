@@ -1,6 +1,6 @@
 # Yoox
 
-## How to run the project
+## How to install the project
 ``
 npm install @yoonit/yoox-store-js
 ``
@@ -13,7 +13,7 @@ import yourStore from './yourstore'
 const myStore = Yoox.store(yourStore, { persist: true, onLoad: hideLoad })
 ```
 
-## store object
+## Store object
 It's only needed to create an object with keys: set, get, mix and state.
 <br>
 
