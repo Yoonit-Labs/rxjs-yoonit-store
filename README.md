@@ -1,6 +1,6 @@
 # Yoox
 
-## How to install the project
+## How to install
 ``
 npm install @yoonit/yoox-store-js
 ``
