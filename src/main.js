@@ -1,5 +1,7 @@
 import { store } from './yoox'
+import { VueInstall } from "./plugins/vue"
+import { VueNextInstall } from './plugins/vue3'
 
-export default { store }
+export default { store, VueInstall, VueNextInstall }
 
-export { store }
+export { store, VueInstall, VueNextInstall }

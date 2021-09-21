@@ -1,6 +1,6 @@
 # Yoox
 
-## How to run the project
+## How to install
 ``
 npm install @yoonit/yoox-store-js
 ``
@@ -13,7 +13,7 @@ import yourStore from './yourstore'
 const myStore = Yoox.store(yourStore, { persist: true, onLoad: hideLoad })
 ```
 
-## store object
+## Store object
 It's only needed to create an object with keys: set, get, mix and state.
 <br>
 
@@ -160,3 +160,35 @@ It's only necessary to pass { persist: true } to the second parameter on store, 
 
 - It's highly recommended to use onLoad method to guarantee that persisted data have been loaded to Yoox state. Ie: Show load until onLoad callback is called.
 
+## Vue Plugin
+
+If you are using Vue 2:
+
+````
+// main.js
+
+import { VueInstall } from '@yoonit/perse-sdk-js'
+import myStore from '../yoox'
+
+Vue.use(VueInstall, myStore)
+
+// Inside project
+
+this.$Yoox.set('userData', user)
+
+````
+
+If you are using Vue 3:
+
+````
+// main.js
+
+import { VueNextInstall } from '@yoonit/perse-sdk-js'
+import myStore from '../yoox'
+
+createApp(App).use(VueNextInstall, myStore)
+
+// Inside project. It's important to notice that there is no '$' on vue 3 global variable
+
+this.__Yoox.set('userData', user)
+````

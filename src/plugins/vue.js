@@ -11,15 +11,6 @@ export const VueInstall = {
 
       methods: {
         /**
-         * Returns the dispatch method
-         * @param payload
-         * @returns {*}
-         */
-        dispatch(payload) {
-          return this.localStore.dispatch(payload)
-        },
-
-        /**
          * Returns the get method of a given get name
          * @param payload
          * @returns {*}
